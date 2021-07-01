@@ -15,7 +15,7 @@ class SQLAlchemyEngine(NamedTuple):
     def from_url(cls, name: str,
                  url: str,
                  convert_unicode: bool = True,
-                 twophase: Optional[bool] = True,
+                 twophase: Optional[bool] = False,
                  query_cls: Type[Query] = Query):
         engine = create_engine(url, convert_unicode=convert_unicode)
         return cls(
@@ -41,7 +41,9 @@ class SQLAlchemyEngine(NamedTuple):
             session.flush()
             session.close()
 
-    def sqlalchemy_middleware(environ_key: Optional[str] = None):
+    def __call__(environ_key: Optional[str] = None):
+        """Middleware.
+        """
         def app_wrapper(app: Callable):
             def caller(environ: dict, start_response: Callable):
                 with self.session() as session:
