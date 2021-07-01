@@ -1,4 +1,4 @@
-from typing import Type, Optional, Mapping, NamedTuple, Callable
+from typing import Optional, NamedTuple, Callable
 from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
@@ -12,20 +12,12 @@ class SQLAlchemyEngine(NamedTuple):
     factory: sessionmaker
 
     @classmethod
-    def from_url(cls, name: str,
-                 url: str,
-                 convert_unicode: bool = True,
-                 twophase: Optional[bool] = False,
-                 query_cls: Type[Query] = Query):
-        engine = create_engine(url, convert_unicode=convert_unicode)
+    def from_url(cls, name: str, url: str, **kwargs):
+        engine = create_engine(url)
         return cls(
             name=name,
             engine=engine,
-            factory=sessionmaker(
-                bind=engine,
-                twophase=twophase,
-                query_cls=query_cls
-            )
+            factory=sessionmaker(bind=engine, **kwargs)
         )
 
     @contextmanager
