@@ -33,7 +33,7 @@ class SQLAlchemyEngine(NamedTuple):
             session.flush()
             session.close()
 
-    def __call__(environ_key: Optional[str] = None):
+    def __call__(self, environ_key: Optional[str] = None):
         """Middleware.
         """
         def app_wrapper(app: Callable):
